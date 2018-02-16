@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">casual</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
@@ -18,6 +20,10 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="AppTheme.StartPage">
+        <item name="android:textSize">30sp</item>
     </style>
 
 </resources>
