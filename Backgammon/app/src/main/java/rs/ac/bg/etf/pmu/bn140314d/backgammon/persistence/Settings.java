@@ -13,12 +13,15 @@ public class Settings implements Serializable {
     private static final ArrayList<Integer> player1Checkers = new ArrayList<>();
     private static final ArrayList<Integer> player2Checkers = new ArrayList<>();
     static {
+        boards.add(R.drawable.star_wars_background_icon);
         boards.add(R.drawable.game_board_red_white_icon);
         boards.add(R.drawable.game_board_brown_yellow_icon);
 
+        wholeBoards.add(R.drawable.star_wars_background);
         wholeBoards.add(R.drawable.game_board_red_white);
         wholeBoards.add(R.drawable.game_board_brown_yellow);
 
+        boardFeaturesList.add(new BoardFeatures(0, 0, 0.081, 0.07675, 0.1, 5));
         boardFeaturesList.add(new BoardFeatures(0.025, 0.0364, 0.045, 0.0755833, 0.092722, 5));
         boardFeaturesList.add(new BoardFeatures(0.025, 0.0364, 0.045, 0.0755833, 0.092722, 5));
 
