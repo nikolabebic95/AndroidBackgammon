@@ -27,7 +27,6 @@ public class SettingsActivity extends AppCompatActivity {
     private Settings settings;
 
     // Delayed removal of status and navigation bar
-
     // Note that some of these constants are new as of API 16 (Jelly Bean)
     // and API 19 (KitKat). It is safe to use them, as they are inlined
     // at compile-time and do nothing on earlier devices.
@@ -40,19 +39,27 @@ public class SettingsActivity extends AppCompatActivity {
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
     public void onSwitch1Clicked(View view) {
-        Switch switch_view = findViewById(R.id.player_1_bot);
+        Switch switchView = findViewById(R.id.player_1_bot);
+        Switch otherSwitch = findViewById(R.id.player_2_bot);
         TextView textView = findViewById(R.id.player_1_bot_text);
-        if (switch_view.isChecked()) {
-            textView.setText(getResources().getText(R.string.cpu));
-        } else {
-            textView.setText(getResources().getText(R.string.human));
+        TextView otherText = findViewById(R.id.player_2_bot_text);
+        textView.setText(getBotText(switchView.isChecked()));
+        if (switchView.isChecked() && otherSwitch.isChecked()) {
+            otherSwitch.setChecked(false);
+            otherText.setText(getBotText(false));
         }
     }
 
     public void onSwitch2Clicked(View view) {
-        Switch switch_view = findViewById(R.id.player_2_bot);
+        Switch switchView = findViewById(R.id.player_2_bot);
+        Switch otherSwitch = findViewById(R.id.player_1_bot);
         TextView textView = findViewById(R.id.player_2_bot_text);
-        textView.setText(getBotText(switch_view.isChecked()));
+        TextView otherText = findViewById(R.id.player_1_bot_text);
+        textView.setText(getBotText(switchView.isChecked()));
+        if (switchView.isChecked() && otherSwitch.isChecked()) {
+            otherSwitch.setChecked(false);
+            otherText.setText(getBotText(false));
+        }
     }
 
     public void onLeftBoardClicked(View view) {
