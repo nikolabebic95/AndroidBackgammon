@@ -100,6 +100,11 @@ public class SettingsActivity extends AppCompatActivity {
         Persistence.saveSettings(settings);
     }
 
+    public void onResetClicked(View view) {
+        settings.setDefault();
+        loadInstanceState();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +144,10 @@ public class SettingsActivity extends AppCompatActivity {
             settings = (Settings)savedInstanceState.get(BUNDLE_KEY);
         }
 
+        loadInstanceState();
+    }
+
+    private void loadInstanceState() {
         EditText player1Name = findViewById(R.id.player_1_name);
         EditText player2Name = findViewById(R.id.player_2_name);
         Switch player1Bot = findViewById(R.id.player_1_bot);

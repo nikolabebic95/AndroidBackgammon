@@ -20,6 +20,14 @@ public class Settings implements Serializable {
         player2Checkers.add(R.drawable.water);
     }
 
+    private static final String defaultPlayer1Name = "Player 1";
+    private static final String defaultPlayer2Name = "Player 2";
+    private static final boolean defaultPlayer1Bot = false;
+    private static final boolean defaultPlayer2Bot = false;
+    private static final int defaultBoardIndex = 0;
+    private static final int defaultCheckerIndex = 0;
+    private static final boolean defaultSoundOn = true;
+
     private String player1Name;
     private String player2Name;
     private boolean player1Bot;
@@ -27,6 +35,10 @@ public class Settings implements Serializable {
     private int boardIndex;
     private int checkerIndex;
     private boolean soundOn;
+
+    public Settings() {
+        setDefault();
+    }
 
     public String getPlayer1Name() {
         return player1Name;
@@ -102,5 +114,15 @@ public class Settings implements Serializable {
 
     public void prevCheckers() {
         checkerIndex = (checkerIndex + player1Checkers.size() - 1) % player1Checkers.size();
+    }
+
+    public void setDefault() {
+        player1Name = defaultPlayer1Name;
+        player2Name = defaultPlayer1Name;
+        player1Bot = defaultPlayer1Bot;
+        player2Bot = defaultPlayer2Bot;
+        boardIndex = defaultBoardIndex;
+        checkerIndex = defaultCheckerIndex;
+        soundOn = defaultSoundOn;
     }
 }

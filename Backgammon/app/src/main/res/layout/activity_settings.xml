@@ -195,12 +195,21 @@
                 android:onClick="onSoundSwitchClicked" />
 
             <Button
+                android:id="@+id/reset"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:onClick="onResetClicked"
+                android:text="@string/reset_to_default" />
+
+            <Button
                 android:id="@+id/confirm"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="8"
+                android:layout_weight="4"
                 android:onClick="onConfirmClicked"
                 android:text="@string/confirm" />
+
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
