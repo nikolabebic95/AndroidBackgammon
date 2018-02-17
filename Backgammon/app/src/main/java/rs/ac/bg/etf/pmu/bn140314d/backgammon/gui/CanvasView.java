@@ -1,0 +1,114 @@
+package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.util.AttributeSet;
+import android.view.View;
+
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BitmapUtility;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BoardFeatures;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.FieldGeometryUtility;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.IField;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
+
+public class CanvasView extends View {
+    private GameActivity gameActivity;
+
+    private Bitmap background;
+    private Bitmap player1;
+    private Bitmap player2;
+
+    private int width;
+    private int height;
+
+    public CanvasView(Context context) {
+        super(context);
+    }
+
+    public CanvasView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public CanvasView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public void setGameActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (width == 0) width = getWidth();
+        if (height == 0) height = getHeight();
+
+        drawBackground(canvas);
+        drawCheckers(canvas);
+        drawCurrentChecker(canvas);
+    }
+
+    private void drawBackground(Canvas canvas) {
+        if (background == null) {
+            background = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getWholeBoard()), width, height);
+        }
+
+        canvas.drawBitmap(background, 0, 0, null);
+    }
+
+    private void drawCheckers(Canvas canvas) {
+        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
+
+        if (player1 == null) {
+            player1 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer1Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
+        }
+
+        if (player2 == null) {
+            player2 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer2Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
+        }
+
+        GameModel gameModel = gameActivity.getGameModel();
+        ITable table = gameModel.getGame().table();
+
+        for (int i = 0; i < ITable.NUMBER_OF_FIELDS; i++) {
+            IField field = table.getField(i);
+            drawCheckers(canvas, i, field);
+        }
+    }
+
+    private void drawCheckers(Canvas canvas, int fieldIndex, IField field) {
+        int numberOfCheckers = field.getNumberOfChips();
+        PlayerId playerId = field.getPlayerId();
+
+        Point point = FieldGeometryUtility.pointFromIndex(fieldIndex);
+        Point drawPoint = FieldGeometryUtility.canvasPointFromPoint(point, width, height, gameActivity.getSettings().getBoardFeatures());
+
+        if (playerId == PlayerId.NONE) return;
+
+        Bitmap bitmap = playerId == PlayerId.FIRST ? player1 : player2;
+
+        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
+        int heightOfOne = (int)(height * boardFeatures.getCheckerHeight());
+
+        for (int i = 0; i < numberOfCheckers; i++) {
+            canvas.drawBitmap(bitmap, drawPoint.x, drawPoint.y, null);
+            if (fieldIndex < ITable.NUMBER_OF_FIELDS / 2) {
+                drawPoint.y += heightOfOne;
+            } else {
+                drawPoint.y -= heightOfOne;
+            }
+        }
+    }
+
+    private void drawCurrentChecker(Canvas canvas) {
+
+    }
+
+
+}

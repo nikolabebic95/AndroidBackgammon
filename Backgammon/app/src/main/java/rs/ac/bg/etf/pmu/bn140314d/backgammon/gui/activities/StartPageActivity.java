@@ -1,4 +1,4 @@
-package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui;
+package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;

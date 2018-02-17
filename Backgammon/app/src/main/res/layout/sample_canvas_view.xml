@@ -1,0 +1,10 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/rs.ac.bg.etf.pmu.bn140314d.backgammon.gui"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.CanvasView
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
+
+</FrameLayout>

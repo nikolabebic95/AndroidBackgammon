@@ -1,4 +1,4 @@
-package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui;
+package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities;
 
 import android.os.Bundle;
 import android.os.Handler;

@@ -14,6 +14,8 @@ public final class Persistence {
 
     private static final String PREFERENCES_FILE_NAME = "preferences.xml";
 
+    private static Settings cachedSettings;
+
     /**
      * Checks if there is already a started game
      * @return Whether a started game exists
@@ -30,22 +32,37 @@ public final class Persistence {
         // TODO: Implementation
     }
 
+    /**
+     * Loads the settings from the persistent preferences
+     * @param context Context used for obtaining the preferences object
+     * @return Loaded settings
+     */
     public static Settings loadSettings(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        Settings settings = new Settings();
+        if (cachedSettings == null) {
+            SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+            Settings settings = new Settings();
 
-        settings.setPlayer1Name(preferences.getString(Settings.player1NamePreference, Settings.defaultPlayer1Name));
-        settings.setPlayer2Name(preferences.getString(Settings.player2NamePreference, Settings.defaultPlayer2Name));
-        settings.setPlayer1Bot(preferences.getBoolean(Settings.player1BotPreference, Settings.defaultPlayer1Bot));
-        settings.setPlayer2Bot(preferences.getBoolean(Settings.player2BotPreference, Settings.defaultPlayer2Bot));
-        settings.setBoardIndex(preferences.getInt(Settings.boardIndexPreference, Settings.defaultBoardIndex));
-        settings.setCheckerIndex(preferences.getInt(Settings.checkerIndexPreference, Settings.defaultCheckerIndex));
-        settings.setSoundOn(preferences.getBoolean(Settings.soundOnPreference, Settings.defaultSoundOn));
+            settings.setPlayer1Name(preferences.getString(Settings.player1NamePreference, Settings.defaultPlayer1Name));
+            settings.setPlayer2Name(preferences.getString(Settings.player2NamePreference, Settings.defaultPlayer2Name));
+            settings.setPlayer1Bot(preferences.getBoolean(Settings.player1BotPreference, Settings.defaultPlayer1Bot));
+            settings.setPlayer2Bot(preferences.getBoolean(Settings.player2BotPreference, Settings.defaultPlayer2Bot));
+            settings.setBoardIndex(preferences.getInt(Settings.boardIndexPreference, Settings.defaultBoardIndex));
+            settings.setCheckerIndex(preferences.getInt(Settings.checkerIndexPreference, Settings.defaultCheckerIndex));
+            settings.setSoundOn(preferences.getBoolean(Settings.soundOnPreference, Settings.defaultSoundOn));
 
-        return settings;
+            return settings;
+        } else {
+            return cachedSettings;
+        }
     }
 
+    /**
+     * Saves the settings to the persistent preferences
+     * @param context Context used for obtaining the preferences object
+     * @param settings Settings to save
+     */
     public static void saveSettings(Context context, Settings settings) {
+        cachedSettings = settings;
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 

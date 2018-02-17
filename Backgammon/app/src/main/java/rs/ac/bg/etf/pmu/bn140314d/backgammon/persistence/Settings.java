@@ -4,14 +4,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.R;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BoardFeatures;
 
 public class Settings implements Serializable {
+    private static final ArrayList<BoardFeatures> boardFeaturesList = new ArrayList<>();
+    private static final ArrayList<Integer> wholeBoards = new ArrayList<>();
     private static final ArrayList<Integer> boards = new ArrayList<>();
     private static final ArrayList<Integer> player1Checkers = new ArrayList<>();
     private static final ArrayList<Integer> player2Checkers = new ArrayList<>();
     static {
         boards.add(R.drawable.game_board_red_white_icon);
         boards.add(R.drawable.game_board_brown_yellow_icon);
+
+        wholeBoards.add(R.drawable.game_board_red_white);
+        wholeBoards.add(R.drawable.game_board_brown_yellow);
+
+        boardFeaturesList.add(new BoardFeatures(0.025, 0.0364, 0.045, 0.0755833, 0.092722, 5));
+        boardFeaturesList.add(new BoardFeatures(0.025, 0.0364, 0.045, 0.0755833, 0.092722, 5));
 
         player1Checkers.add(R.drawable.yoda);
         player2Checkers.add(R.drawable.stormtrooper);
@@ -82,6 +91,14 @@ public class Settings implements Serializable {
 
     public int getBoard() {
         return boards.get(boardIndex);
+    }
+
+    public int getWholeBoard() {
+        return wholeBoards.get(boardIndex);
+    }
+
+    public BoardFeatures getBoardFeatures() {
+        return boardFeaturesList.get(boardIndex);
     }
 
     public int getBoardIndex() {
