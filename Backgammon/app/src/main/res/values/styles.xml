@@ -2,15 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#A9B7C6</item>
-        <item name="colorPrimaryDark">#2B2B2B</item>
-        <item name="colorAccent">#CB772F</item>
-        <item name="android:textColor">#A9B7C6</item>
-        <item name="android:editTextColor">#A9B7C6</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:editTextColor">@color/colorPrimary</item>
         <item name="android:fontFamily">casual</item>
-        <item name="android:colorButtonNormal">#323232</item>
-        <item name="android:colorBackground">#2B2B2B</item>
-        <item name="android:background">#2B2B2B</item>
+        <item name="android:colorButtonNormal">@color/colorButtonBackground</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 
