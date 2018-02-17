@@ -46,33 +46,29 @@ public class CanvasView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (width == 0) width = getWidth();
-        if (height == 0) height = getHeight();
+        if (getWidth() != width || getHeight() != height) {
+            width = getWidth();
+            height = getHeight();
+            init();
+        }
 
         drawBackground(canvas);
         drawCheckers(canvas);
         drawCurrentChecker(canvas);
     }
 
-    private void drawBackground(Canvas canvas) {
-        if (background == null) {
-            background = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getWholeBoard()), width, height);
-        }
+    private void init() {
+        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
+        background = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getWholeBoard()), width, height);
+        player1 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer1Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
+        player2 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer2Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
+    }
 
+    private void drawBackground(Canvas canvas) {
         canvas.drawBitmap(background, 0, 0, null);
     }
 
     private void drawCheckers(Canvas canvas) {
-        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
-
-        if (player1 == null) {
-            player1 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer1Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
-        }
-
-        if (player2 == null) {
-            player2 = BitmapUtility.scaleBitmap(BitmapFactory.decodeResource(getResources(), gameActivity.getSettings().getPlayer2Checker()), (int)(width * boardFeatures.getCheckerWidth()), (int)(height * boardFeatures.getCheckerHeight()));
-        }
-
         GameModel gameModel = gameActivity.getGameModel();
         ITable table = gameModel.getGame().table();
 
