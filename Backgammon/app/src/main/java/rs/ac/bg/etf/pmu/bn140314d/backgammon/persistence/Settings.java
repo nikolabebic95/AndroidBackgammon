@@ -20,13 +20,21 @@ public class Settings implements Serializable {
         player2Checkers.add(R.drawable.water);
     }
 
-    private static final String defaultPlayer1Name = "Player 1";
-    private static final String defaultPlayer2Name = "Player 2";
-    private static final boolean defaultPlayer1Bot = false;
-    private static final boolean defaultPlayer2Bot = false;
-    private static final int defaultBoardIndex = 0;
-    private static final int defaultCheckerIndex = 0;
-    private static final boolean defaultSoundOn = true;
+    public static final String defaultPlayer1Name = "Player 1";
+    public static final String defaultPlayer2Name = "Player 2";
+    public static final boolean defaultPlayer1Bot = false;
+    public static final boolean defaultPlayer2Bot = false;
+    public static final int defaultBoardIndex = 0;
+    public static final int defaultCheckerIndex = 0;
+    public static final boolean defaultSoundOn = true;
+
+    public static final String player1NamePreference = "Player1Name";
+    public static final String player2NamePreference = "Player2Name";
+    public static final String player1BotPreference = "Player1Bot";
+    public static final String player2BotPreference = "Player2Bot";
+    public static final String boardIndexPreference = "BoardIndex";
+    public static final String checkerIndexPreference = "CheckerIndex";
+    public static final String soundOnPreference = "SoundOn";
 
     private String player1Name;
     private String player2Name;
@@ -76,7 +84,11 @@ public class Settings implements Serializable {
         return boards.get(boardIndex);
     }
 
-    public void setBoard(int boardIndex) {
+    public int getBoardIndex() {
+        return boardIndex;
+    }
+
+    public void setBoardIndex(int boardIndex) {
         this.boardIndex = boardIndex;
     }
 
@@ -86,6 +98,10 @@ public class Settings implements Serializable {
 
     public int getPlayer2Checker() {
         return player2Checkers.get(checkerIndex);
+    }
+
+    public int getCheckerIndex() {
+        return checkerIndex;
     }
 
     public void setCheckerIndex(int checkerIndex) {
@@ -118,7 +134,7 @@ public class Settings implements Serializable {
 
     public void setDefault() {
         player1Name = defaultPlayer1Name;
-        player2Name = defaultPlayer1Name;
+        player2Name = defaultPlayer2Name;
         player1Bot = defaultPlayer1Bot;
         player2Bot = defaultPlayer2Bot;
         boardIndex = defaultBoardIndex;

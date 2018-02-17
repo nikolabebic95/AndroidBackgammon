@@ -97,7 +97,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onConfirmClicked(View view) {
-        Persistence.saveSettings(settings);
+        saveInstanceState();
+        Persistence.saveSettings(this, settings);
     }
 
     public void onResetClicked(View view) {
@@ -139,7 +140,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void init(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            settings = Persistence.loadSettings();
+            settings = Persistence.loadSettings(this);
         } else {
             settings = (Settings)savedInstanceState.get(BUNDLE_KEY);
         }
