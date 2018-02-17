@@ -6,10 +6,17 @@
     <string name="hall_of_fame">Hall of fame</string>
 
     <string name="title_activity_game">GameActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_settings">SettingsActivity</string>
 
     <string name="title_activity_hall_of_fame">HallOfFameActivity</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="player_1">Player 1</string>
+    <string name="player_2">Player 2</string>
+    <string name="human">Human</string>
+    <string name="cpu">CPU</string>
+    <string name="sound_on">Sound: on</string>
+    <string name="sound_off">Sound: off</string>
+    <string name="confirm">Confirm</string>
 </resources>

@@ -18,7 +18,28 @@ public final class Persistence {
         return false;
     }
 
+    /**
+     * Erases the current game from the database
+     */
     public static void clearCurrentGame() {
+        // TODO: Implementation
+    }
+
+    public static Settings loadSettings() {
+        // TODO: Actually load from persistent memory
+
+        Settings settings = new Settings();
+        settings.setBoard(0);
+        settings.setCheckerIndex(0);
+        settings.setPlayer1Name("Player 1");
+        settings.setPlayer2Name("Player 2");
+        settings.setPlayer1Bot(false);
+        settings.setPlayer2Bot(false);
+        settings.setSoundOn(true);
+        return settings;
+    }
+
+    public static void saveSettings(Settings settings) {
         // TODO: Implementation
     }
 }
