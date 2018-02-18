@@ -11,11 +11,6 @@ public class WaitingForMoveState extends ControllerState {
 
     @Override
     public ArrayList<Integer> getSelectedFields() {
-        ArrayList<Integer> ret = new ArrayList<>();
-
-        ret.add(5);
-        ret.add(12);
-
-        return ret;
+        return gameActivity.getGameModel().getGame().table().getAllIndicesWithPlayer(gameActivity.getGameModel().getCurrentPlayer());
     }
 }
