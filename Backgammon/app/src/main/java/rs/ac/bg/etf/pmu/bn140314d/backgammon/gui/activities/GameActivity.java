@@ -10,13 +10,17 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.R;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.CanvasView;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.ControllerState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForDiceRollState;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForMoveState;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.DiceImagesHelper;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Settings;
 
@@ -134,7 +138,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void init(Bundle savedInstanceState) {
         settings = Persistence.loadSettings(this);
-        gameModel = Persistence.loadGameModel();
+        gameModel = Persistence.loadGameModel(this);
 
         loadInstanceState();
     }
@@ -142,13 +146,14 @@ public class GameActivity extends AppCompatActivity {
     private void loadInstanceState() {
         TextView player1 = findViewById(R.id.player_1_text_view);
         TextView player2 = findViewById(R.id.player_2_text_view);
-
         player1.setText(settings.getPlayer1Name());
         player2.setText(settings.getPlayer2Name());
 
-        // TODO: Refactor:
-        controller = new WaitingForDiceRollState(this);
+        if (gameModel.getGameState() == GameState.SHOULD_ROLL) controller = new WaitingForDiceRollState(this);
+        else controller = new WaitingForMoveState(this);
+
         toggleDiceAndButton();
+        updateDice();
     }
 
     public Settings getSettings() {
@@ -194,6 +199,21 @@ public class GameActivity extends AppCompatActivity {
         } else {
             dice.setVisibility(View.INVISIBLE);
             button.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void updateDice() {
+        if (gameModel.getDice() != null) {
+            ImageView dice1 = findViewById(R.id.dice1);
+            ImageView dice2 = findViewById(R.id.dice2);
+
+            if (gameModel.isDiceInverted()) {
+                dice1.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getSmallerDie()));
+                dice2.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getGreaterOrEqualDie()));
+            } else {
+                dice1.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getGreaterOrEqualDie()));
+                dice2.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getSmallerDie()));
+            }
         }
     }
 }

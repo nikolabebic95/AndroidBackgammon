@@ -13,6 +13,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.FieldGeometryUtility;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.IField;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.players.Dice;
 
 public class CheckerDragState extends ControllerState {
@@ -65,6 +66,7 @@ public class CheckerDragState extends ControllerState {
             gameModel.setGameState(GameState.SHOULD_ROLL);
             gameActivity.setController(new WaitingForDiceRollState(gameActivity));
             gameActivity.toggleDiceAndButton();
+            Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
         }
 
         gameActivity.getCanvasView().invalidate();

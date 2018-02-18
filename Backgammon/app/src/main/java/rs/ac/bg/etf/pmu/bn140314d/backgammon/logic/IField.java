@@ -1,10 +1,12 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.logic;
 
+import java.io.Serializable;
+
 /**
  * @author Nikola Bebic
  * @version 25-Jan-2017
  */
-public interface IField {
+public interface IField extends Serializable {
 
     /**
      * Gets the player ID of the field

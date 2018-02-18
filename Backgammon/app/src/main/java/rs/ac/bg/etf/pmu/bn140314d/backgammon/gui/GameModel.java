@@ -13,6 +13,7 @@ public class GameModel implements Serializable {
     private PlayerId currentPlayer;
     private GameState gameState;
     private ArrayList<Integer> played = new ArrayList<>();
+    private boolean diceInverted;
 
     public GameModel(Game game) {
         this.game = game;
@@ -54,5 +55,13 @@ public class GameModel implements Serializable {
 
     public void play(int move) {
         played.add(move);
+    }
+
+    public boolean isDiceInverted() {
+        return diceInverted;
+    }
+
+    public void setDiceInverted(boolean diceInverted) {
+        this.diceInverted = diceInverted;
     }
 }

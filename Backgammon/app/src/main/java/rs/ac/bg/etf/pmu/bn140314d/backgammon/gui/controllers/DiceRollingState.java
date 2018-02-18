@@ -4,6 +4,7 @@ import android.hardware.SensorEvent;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 
 public class DiceRollingState extends ControllerState {
     public DiceRollingState(GameActivity gameActivity) {
@@ -25,6 +26,7 @@ public class DiceRollingState extends ControllerState {
             gameActivity.toggleDiceAndButton();
             gameActivity.getCanvasView().invalidate();
             gameActivity.unregisterListener();
+            Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
         } else {
             rollDice();
         }

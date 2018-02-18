@@ -1,12 +1,13 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Nikola Bebic
  * @version 25-Jan-2017
  */
-public interface ITable {
+public interface ITable extends Serializable {
 
     /**
      * Total number of fields on the table

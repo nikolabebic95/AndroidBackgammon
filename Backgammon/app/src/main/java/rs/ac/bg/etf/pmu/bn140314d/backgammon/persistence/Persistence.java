@@ -6,6 +6,10 @@ import android.content.SharedPreferences;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -66,6 +70,8 @@ public final class Persistence {
             settings.setCheckerIndex(preferences.getInt(Settings.checkerIndexPreference, Settings.defaultCheckerIndex));
             settings.setSoundOn(preferences.getBoolean(Settings.soundOnPreference, Settings.defaultSoundOn));
 
+            cachedSettings = settings;
+
             return settings;
         } else {
             return cachedSettings;
@@ -93,14 +99,33 @@ public final class Persistence {
         editor.apply();
     }
 
-    public static GameModel loadGameModel() {
-        // TODO: Refactor
-        Game game = new Game();
-        game.start(new Table(new FieldFactory()));
-        return new GameModel(game);
+    public static GameModel loadGameModel(Context context) {
+        if (cachedGameModel == null) {
+            if (checkIfStartedGameExists(context)) {
+                try (FileInputStream fis = context.openFileInput(GAME_MODEL_FILE_NAME); ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    cachedGameModel = (GameModel)ois.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                return cachedGameModel;
+            } else {
+                Game game = new Game();
+                game.start(new Table(new FieldFactory()));
+                cachedGameModel = new GameModel(game);
+                return cachedGameModel;
+            }
+        } else {
+            return cachedGameModel;
+        }
     }
 
-    public static void saveGameModel(GameModel gameModel) {
-        // TODO: Implementation
+    public static void saveGameModel(Context context, GameModel gameModel) {
+        cachedGameModel = gameModel;
+        try (FileOutputStream fos = context.openFileOutput(GAME_MODEL_FILE_NAME, Context.MODE_PRIVATE); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(gameModel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

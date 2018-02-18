@@ -62,18 +62,21 @@ public class StartPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
         mContentView = findViewById(R.id.fullscreen_content);
-
-        View continueButton = findViewById(R.id.continue_button);
-
-        if (!Persistence.checkIfStartedGameExists(this)) {
-            continueButton.setEnabled(false);
-        }
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         hide();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        View continueButton = findViewById(R.id.continue_button);
+
+        continueButton.setEnabled(Persistence.checkIfStartedGameExists(this));
     }
 
     private void hide() {

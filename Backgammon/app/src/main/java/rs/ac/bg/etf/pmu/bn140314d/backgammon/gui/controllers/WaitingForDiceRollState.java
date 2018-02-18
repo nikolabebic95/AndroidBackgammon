@@ -5,6 +5,7 @@ import android.view.View;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 
 public class WaitingForDiceRollState extends ControllerState {
     private int shakeCounter = 0;
@@ -27,6 +28,7 @@ public class WaitingForDiceRollState extends ControllerState {
         gameActivity.toggleDiceAndButton();
         gameActivity.getCanvasView().invalidate();
         gameActivity.unregisterListener();
+        Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
     }
 
     @Override
