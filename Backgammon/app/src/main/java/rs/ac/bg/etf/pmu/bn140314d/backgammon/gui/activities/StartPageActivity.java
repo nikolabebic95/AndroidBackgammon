@@ -34,7 +34,10 @@ public class StartPageActivity extends AppCompatActivity {
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
     public void onStartGameClicked(View view) {
-        Persistence.clearCurrentGame();
+        if (Persistence.checkIfStartedGameExists(this)) {
+            Persistence.clearCurrentGame(this);
+        }
+
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
@@ -62,7 +65,7 @@ public class StartPageActivity extends AppCompatActivity {
 
         View continueButton = findViewById(R.id.continue_button);
 
-        if (!Persistence.checkIfStartedGameExists()) {
+        if (!Persistence.checkIfStartedGameExists(this)) {
             continueButton.setEnabled(false);
         }
     }

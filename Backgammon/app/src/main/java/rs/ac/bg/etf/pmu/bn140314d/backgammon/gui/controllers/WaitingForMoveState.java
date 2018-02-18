@@ -12,7 +12,6 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.players.Dice;
 
 public class WaitingForMoveState extends ControllerState {
     private Dice dice;
-    private ArrayList<Integer> played = new ArrayList<>();
 
     private static final double DIST_THRESHOLD = 100;
 
@@ -50,8 +49,13 @@ public class WaitingForMoveState extends ControllerState {
         }
 
         if (minField != -2) {
-            // TODO: Remove checker from game
+            // TODO: Does not work if removing from the bar
+            gameActivity.getGameModel().getGame().table().getField(minField).decreaseNumberOfChips(gameActivity.getGameModel().getCurrentPlayer());
             gameActivity.setController(new CheckerDragState(gameActivity, this, minField, x, y));
         }
+    }
+
+    Dice getDice() {
+        return dice;
     }
 }

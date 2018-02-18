@@ -17,9 +17,6 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.CanvasView;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.ControllerState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForDiceRollState;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.FieldFactory;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Game;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Table;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Settings;
 
@@ -95,12 +92,6 @@ public class GameActivity extends AppCompatActivity {
 
         init(savedInstanceState);
 
-        // TODO: Refactor
-        Game game = new Game();
-        game.start(new Table(new FieldFactory()));
-        gameModel = new GameModel(game);
-
-        // TODO: Refactor
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         registerListener();
 
@@ -143,6 +134,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void init(Bundle savedInstanceState) {
         settings = Persistence.loadSettings(this);
+        gameModel = Persistence.loadGameModel();
 
         loadInstanceState();
     }

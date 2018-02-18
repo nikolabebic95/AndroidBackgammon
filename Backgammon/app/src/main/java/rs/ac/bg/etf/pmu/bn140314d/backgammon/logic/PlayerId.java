@@ -1,10 +1,12 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.logic;
 
+import java.io.Serializable;
+
 /**
  * @author Nikola Bebic
  * @version 26-Jan-2017
  */
-public enum PlayerId {
+public enum PlayerId implements Serializable {
     /**
      * Represents an empty field
      */
@@ -15,7 +17,7 @@ public enum PlayerId {
      */
     FIRST,
     /**
-     * Represents the field whre the second player has at least one chip
+     * Represents the field where the second player has at least one chip
      */
     SECOND;
 

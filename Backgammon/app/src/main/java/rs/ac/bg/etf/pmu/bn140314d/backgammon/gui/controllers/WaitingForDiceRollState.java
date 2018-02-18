@@ -3,6 +3,7 @@ package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers;
 import android.hardware.SensorEvent;
 import android.view.View;
 
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
 
 public class WaitingForDiceRollState extends ControllerState {
@@ -21,6 +22,7 @@ public class WaitingForDiceRollState extends ControllerState {
     public void onDiceRollClicked(View view) {
         rollDice();
 
+        gameActivity.getGameModel().setGameState(GameState.SHOULD_MOVE);
         gameActivity.setController(new WaitingForMoveState(gameActivity));
         gameActivity.toggleDiceAndButton();
         gameActivity.getCanvasView().invalidate();

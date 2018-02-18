@@ -1,6 +1,7 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.logic;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.players.Dice;
@@ -9,7 +10,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.players.Dice;
  * @author Nikola Bebic
  * @version 26-Jan-2017
  */
-public interface IGame {
+public interface IGame extends Serializable {
 
     int STARTING_NUMBER_OF_POINTS = 167;
 

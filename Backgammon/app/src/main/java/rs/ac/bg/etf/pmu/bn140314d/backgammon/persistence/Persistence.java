@@ -3,6 +3,17 @@ package rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.FieldFactory;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Game;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Table;
+
 /**
  * Utility class used for accessing persistent data
  */
@@ -13,23 +24,28 @@ public final class Persistence {
     private Persistence() {}
 
     private static final String PREFERENCES_FILE_NAME = "preferences.xml";
+    private static final String GAME_MODEL_FILE_NAME = "game_model.bin";
 
     private static Settings cachedSettings;
+    private static GameModel cachedGameModel;
 
     /**
      * Checks if there is already a started game
      * @return Whether a started game exists
      */
-    public static boolean checkIfStartedGameExists() {
-        // TODO: Implementation
-        return false;
+    public static boolean checkIfStartedGameExists(Context context) {
+        if (cachedGameModel != null) return true;
+
+        File file = new File(context.getFilesDir(), GAME_MODEL_FILE_NAME);
+        return file.exists();
     }
 
     /**
      * Erases the current game from the database
      */
-    public static void clearCurrentGame() {
-        // TODO: Implementation
+    public static void clearCurrentGame(Context context) {
+        cachedGameModel = null;
+        context.deleteFile(GAME_MODEL_FILE_NAME);
     }
 
     /**
@@ -75,5 +91,16 @@ public final class Persistence {
         editor.putBoolean(Settings.soundOnPreference, settings.isSoundOn());
 
         editor.apply();
+    }
+
+    public static GameModel loadGameModel() {
+        // TODO: Refactor
+        Game game = new Game();
+        game.start(new Table(new FieldFactory()));
+        return new GameModel(game);
+    }
+
+    public static void saveGameModel(GameModel gameModel) {
+        // TODO: Implementation
     }
 }

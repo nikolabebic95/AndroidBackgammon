@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.players;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.RandomUtility;
@@ -8,7 +9,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.RandomUtility;
  * @author Nikola Bebic
  * @version 26-Jan-2017
  */
-public class Dice {
+public class Dice implements Serializable {
 
     // region Private fields
 
