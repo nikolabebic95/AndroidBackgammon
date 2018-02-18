@@ -4,12 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -37,6 +36,27 @@ public class CanvasView extends View {
     {
         selectedPaint.setColor(getResources().getColor(R.color.colorAccent, null));
         selectedPaint.setAlpha(128);
+
+        setOnTouchListener(((view, motionEvent) -> {
+            view.performClick();
+
+            float x = motionEvent.getX();
+            float y = motionEvent.getY();
+
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    gameActivity.getController().onPointerDown(x, y);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    gameActivity.getController().onPointerMove(x, y);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    gameActivity.getController().onPointerUp(x, y);
+                    break;
+            }
+
+            return true;
+        }));
     }
 
     public CanvasView(Context context) {
@@ -128,8 +148,16 @@ public class CanvasView extends View {
     }
 
     private void drawCurrentChecker(Canvas canvas) {
+        Point point = gameActivity.getController().getCurrentChecker();
+        if (point == null) return;
 
+        PlayerId playerId = gameActivity.getGameModel().getCurrentPlayer();
+        Bitmap bitmap = playerId == PlayerId.FIRST ? player1 : player2;
+        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
+
+        int width = (int)(getWidth() * boardFeatures.getCheckerWidth());
+        int height = (int)(getHeight() * boardFeatures.getCheckerHeight());
+
+        canvas.drawBitmap(bitmap, point.x - width / 2, point.y - height / 2, null);
     }
-
-
 }

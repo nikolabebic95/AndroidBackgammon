@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers;
 
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.view.MotionEvent;
@@ -22,9 +23,11 @@ public abstract class ControllerState {
         this.gameActivity = gameActivity;
     }
 
-    public boolean onTouchListener(View view, MotionEvent motionEvent) {
-        return false;
-    }
+    public void onPointerDown(float x, float y) {}
+
+    public void onPointerMove(float x, float y) {}
+
+    public void onPointerUp(float x, float y) {}
 
     public void onSensorChanged(SensorEvent sensorEvent) {}
 
@@ -42,6 +45,10 @@ public abstract class ControllerState {
 
     public boolean usesAccelerometer() {
         return false;
+    }
+
+    public Point getCurrentChecker() {
+        return null;
     }
 
     protected void rollDice() {

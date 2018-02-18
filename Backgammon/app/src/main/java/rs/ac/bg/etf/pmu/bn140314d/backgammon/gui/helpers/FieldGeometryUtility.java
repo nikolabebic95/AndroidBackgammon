@@ -55,4 +55,14 @@ public final class FieldGeometryUtility {
 
         return new Rect(upperLeft.x, upperLeft.y, lowerRight.x, lowerRight.y);
     }
+
+    public static double distance(Point point, Rect rect) {
+        int cx = Math.max(Math.min(point.x, rect.right), rect.left);
+        int cy = Math.max(Math.min(point.y, rect.bottom), rect.top);
+
+        int dx = point.x - cx;
+        int dy = point.y - cy;
+
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }
