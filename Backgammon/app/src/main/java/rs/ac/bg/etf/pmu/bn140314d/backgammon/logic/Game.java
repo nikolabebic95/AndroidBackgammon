@@ -187,6 +187,7 @@ public class Game implements IGame {
                 }
             }
 
+            // TODO: Fix
             if (dice.getGreaterOrEqualDie() == dice.getGreaterOrEqualDie()) {
                 continue;
             }

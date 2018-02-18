@@ -4,10 +4,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.R;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BitmapUtility;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BoardFeatures;
@@ -25,6 +32,12 @@ public class CanvasView extends View {
 
     private int width;
     private int height;
+
+    private Paint selectedPaint = new Paint();
+    {
+        selectedPaint.setColor(getResources().getColor(R.color.colorAccent, null));
+        selectedPaint.setAlpha(128);
+    }
 
     public CanvasView(Context context) {
         super(context);
@@ -55,6 +68,7 @@ public class CanvasView extends View {
         drawBackground(canvas);
         drawCheckers(canvas);
         drawCurrentChecker(canvas);
+        drawSelectedFields(canvas);
     }
 
     private void init() {
@@ -66,6 +80,17 @@ public class CanvasView extends View {
 
     private void drawBackground(Canvas canvas) {
         canvas.drawBitmap(background, 0, 0, null);
+    }
+
+    private void drawSelectedFields(Canvas canvas) {
+        BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
+        ArrayList<Integer> selectedFields = gameActivity.getController().getSelectedFields();
+
+        selectedFields.forEach(fieldIndex -> {
+            Point point = FieldGeometryUtility.pointFromIndex(fieldIndex);
+            Rect rect = FieldGeometryUtility.rectFromPoint(point, width, height, boardFeatures);
+            canvas.drawRect(rect, selectedPaint);
+        });
     }
 
     private void drawCheckers(Canvas canvas) {

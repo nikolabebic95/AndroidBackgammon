@@ -1,6 +1,7 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
 
@@ -32,5 +33,26 @@ public final class FieldGeometryUtility {
         if (point.x >= ITable.NUMBER_OF_FIELDS / 4) ret.x += middleOffset;
 
         return ret;
+    }
+
+    public static Rect rectFromPoint(Point point, int canvasWidth, int canvasHeight, BoardFeatures boardFeatures) {
+        Point upperLeft = new Point(point);
+        double checkerWidth = boardFeatures.getCheckerWidth() * canvasWidth;
+        double fieldHeight = boardFeatures.getCheckerHeight() * boardFeatures.getMaxCheckersOnField() * canvasHeight;
+        double leftOffset = boardFeatures.getLeftOffset() * canvasWidth;
+        double upOffset = boardFeatures.getUpOffset() * canvasHeight;
+        double middleOffset = boardFeatures.getMiddleOffset() * canvasWidth;
+
+        upperLeft.x *= checkerWidth;
+        upperLeft.y *= fieldHeight;
+        upperLeft.x += leftOffset;
+        upperLeft.y += upOffset;
+        if (point.x >= ITable.NUMBER_OF_FIELDS / 4) upperLeft.x += middleOffset;
+
+        Point lowerRight = new Point(upperLeft);
+        lowerRight.x += checkerWidth;
+        lowerRight.y += fieldHeight;
+
+        return new Rect(upperLeft.x, upperLeft.y, lowerRight.x, lowerRight.y);
     }
 }

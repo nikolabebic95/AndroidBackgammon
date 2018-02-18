@@ -2,6 +2,8 @@ package rs.ac.bg.etf.pmu.bn140314d.backgammon.players;
 
 import java.util.Random;
 
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.RandomUtility;
+
 /**
  * @author Nikola Bebic
  * @version 26-Jan-2017
@@ -29,7 +31,6 @@ public class Dice {
 
     // region Dice roll implementation
     public static final int DICE_MAX = 6;
-    private static final Random randomGenerator = new Random();
 
     public Dice(int smallerDie, int greaterOrEqualDie) {
         this.smallerDie = smallerDie;
@@ -37,6 +38,7 @@ public class Dice {
     }
 
     public static Dice roll() {
+        Random randomGenerator = RandomUtility.getRandom();
         int small = randomGenerator.nextInt(DICE_MAX) + 1;
         int big = randomGenerator.nextInt(DICE_MAX) + 1;
         if (small > big) {
