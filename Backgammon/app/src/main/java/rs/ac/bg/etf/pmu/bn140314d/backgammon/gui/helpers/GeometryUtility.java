@@ -4,9 +4,10 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
 
-public final class FieldGeometryUtility {
-    private FieldGeometryUtility() {}
+public final class GeometryUtility {
+    private GeometryUtility() {}
 
     private static final int FIELDS_IN_ROW = ITable.NUMBER_OF_FIELDS / 2;
 
@@ -33,6 +34,43 @@ public final class FieldGeometryUtility {
         if (point.x >= ITable.NUMBER_OF_FIELDS / 4) ret.x += middleOffset;
 
         return ret;
+    }
+
+    public static Point barPointFromPlayerId(PlayerId playerId, int canvasWidth, int canvasHeight, BoardFeatures boardFeatures) {
+        Point ret = new Point();
+        double checkerWidth = boardFeatures.getCheckerWidth() * canvasWidth;
+        double checkerHeight = boardFeatures.getCheckerHeight() * canvasHeight;
+        double fieldHeight = boardFeatures.getCheckerHeight() * (boardFeatures.getMaxCheckersOnField() - 1) * canvasHeight;
+        double leftOffset = boardFeatures.getLeftOffset() * canvasWidth;
+        double upOffset = boardFeatures.getUpOffset() * canvasHeight;
+        double middleOffset = boardFeatures.getMiddleOffset() * canvasWidth;
+
+        ret.x = (int)(leftOffset + checkerWidth * ITable.NUMBER_OF_FIELDS / 4 + middleOffset / 2 - checkerWidth / 2);
+        ret.y = (int)(upOffset + fieldHeight);
+
+        if (playerId == PlayerId.SECOND) ret.y += checkerHeight;
+
+        return ret;
+    }
+
+    public static Rect barRectFromPlayerId(PlayerId playerId, int canvasWidth, int canvasHeight, BoardFeatures boardFeatures) {
+        Point upperLeft = new Point();
+        double checkerWidth = boardFeatures.getCheckerWidth() * canvasWidth;
+        double fieldHeight = boardFeatures.getCheckerHeight() * boardFeatures.getMaxCheckersOnField() * canvasHeight;
+        double leftOffset = boardFeatures.getLeftOffset() * canvasWidth;
+        double upOffset = boardFeatures.getUpOffset() * canvasHeight;
+        double middleOffset = boardFeatures.getMiddleOffset() * canvasWidth;
+
+        upperLeft.x = (int)(leftOffset + checkerWidth * ITable.NUMBER_OF_FIELDS / 4);
+        upperLeft.y = (int)upOffset;
+
+        if (playerId == PlayerId.SECOND) upperLeft.y += fieldHeight;
+
+        Point lowerRight = new Point(upperLeft);
+        lowerRight.x += middleOffset;
+        lowerRight.y += fieldHeight;
+
+        return new Rect(upperLeft.x, upperLeft.y, lowerRight.x, lowerRight.y);
     }
 
     public static Rect rectFromPoint(Point point, int canvasWidth, int canvasHeight, BoardFeatures boardFeatures) {

@@ -38,8 +38,8 @@ public interface ITable extends Serializable {
     /**
      * Spawns one chip from bar
      * @param playerId Player ID
-     * @param numberOfFields Number of fields chip is moved from the beggining
-     * @return True if the spawn was successfull, false otherwise
+     * @param numberOfFields Number of fields chip is moved from the beginning
+     * @return True if the spawn was successful, false otherwise
      */
     boolean spawnFromBar(PlayerId playerId, int numberOfFields);
 
@@ -67,6 +67,18 @@ public interface ITable extends Serializable {
      * @return Number of player 2 chips on the bar
      */
     int getPlayerTwoBar();
+
+    /**
+     * Sets the number of chips on the bar for player 1
+     * @param playerOneBar Number of player 1 chips on the bar
+     */
+    void setPlayerOneBar(int playerOneBar);
+
+    /**
+     * Sets the number of chips on the bar for player 2
+     * @param playerTwoBar Number of player 2 chips on the bar
+     */
+    void setPlayerTwoBar(int playerTwoBar);
 
     /**
      * Gets the number of chips player 1 has born off

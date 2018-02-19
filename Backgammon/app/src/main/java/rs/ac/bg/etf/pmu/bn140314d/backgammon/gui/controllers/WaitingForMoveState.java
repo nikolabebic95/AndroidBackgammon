@@ -5,9 +5,12 @@ import android.graphics.Rect;
 
 import java.util.ArrayList;
 
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BoardFeatures;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.FieldGeometryUtility;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.GeometryUtility;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.players.Dice;
 
 public class WaitingForMoveState extends ControllerState {
@@ -22,7 +25,8 @@ public class WaitingForMoveState extends ControllerState {
 
     @Override
     public ArrayList<Integer> getSelectedFields() {
-        return gameActivity.getGameModel().getGame().table().getAllIndicesWithPlayer(gameActivity.getGameModel().getCurrentPlayer());
+        GameModel gameModel = gameActivity.getGameModel();
+        return gameModel.getGame().calculateAllStartingIndices(gameModel.getCurrentPlayer(), dice, gameModel.getPlayed());
     }
 
     @Override
@@ -39,9 +43,15 @@ public class WaitingForMoveState extends ControllerState {
         int minField = -2;
 
         for (Integer field : fields) {
-            Point point = FieldGeometryUtility.pointFromIndex(field);
-            Rect rect = FieldGeometryUtility.rectFromPoint(point, width, height, boardFeatures);
-            double dist = FieldGeometryUtility.distance(target, rect);
+            Rect rect;
+            if (field == -1) {
+                rect = GeometryUtility.barRectFromPlayerId(gameActivity.getGameModel().getCurrentPlayer(), width, height, boardFeatures);
+            } else {
+                Point point = GeometryUtility.pointFromIndex(field);
+                rect = GeometryUtility.rectFromPoint(point, width, height, boardFeatures);
+            }
+
+            double dist = GeometryUtility.distance(target, rect);
             if (dist < minDist && dist < DIST_THRESHOLD) {
                 minDist = dist;
                 minField = field;
@@ -49,8 +59,19 @@ public class WaitingForMoveState extends ControllerState {
         }
 
         if (minField != -2) {
-            // TODO: Does not work if removing from the bar
-            gameActivity.getGameModel().getGame().table().getField(minField).decreaseNumberOfChips(gameActivity.getGameModel().getCurrentPlayer());
+            ITable table = gameActivity.getGameModel().getGame().table();
+            PlayerId playerId = gameActivity.getGameModel().getCurrentPlayer();
+
+            if (minField == -1) {
+                if (playerId == PlayerId.FIRST) {
+                    table.setPlayerOneBar(table.getPlayerOneBar() - 1);
+                } else if (playerId == PlayerId.SECOND) {
+                    table.setPlayerTwoBar(table.getPlayerTwoBar() - 1);
+                }
+            } else {
+                table.getField(minField).decreaseNumberOfChips(gameActivity.getGameModel().getCurrentPlayer());
+            }
+
             gameActivity.setController(new CheckerDragState(gameActivity, this, minField, x, y));
         }
     }

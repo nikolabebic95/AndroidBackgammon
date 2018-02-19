@@ -9,7 +9,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.BoardFeatures;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.FieldGeometryUtility;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.GeometryUtility;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.IField;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
@@ -52,8 +52,29 @@ public class CheckerDragState extends ControllerState {
     public void onPointerUp(float x, float y) {
         int field = calculateCurrentMove();
         GameModel gameModel = gameActivity.getGameModel();
+        PlayerId playerId = gameModel.getCurrentPlayer();
+        ITable table = gameModel.getGame().table();
 
-        gameModel.getGame().table().getField(field).increaseNumberOfChips(gameActivity.getGameModel().getCurrentPlayer());
+        if (field != -1) {
+            if (table.getField(field).getPlayerId() == playerId.other()) {
+                if (playerId == PlayerId.FIRST) {
+                    table.setPlayerTwoBar(table.getPlayerTwoBar() + 1);
+                } else if (playerId == PlayerId.SECOND) {
+                    table.setPlayerOneBar(table.getPlayerOneBar() + 1);
+                }
+
+                table.getField(field).decreaseNumberOfChips(playerId.other());
+            }
+
+            table.getField(field).increaseNumberOfChips(playerId);
+        }
+        else {
+            if (playerId == PlayerId.FIRST) {
+                table.setPlayerOneBar(table.getPlayerOneBar() + 1);
+            } else if (playerId == PlayerId.SECOND) {
+                table.setPlayerTwoBar(table.getPlayerTwoBar() + 1);
+            }
+        }
 
         if (field != startField) {
             gameModel.play(Math.abs(field - startField));
@@ -91,9 +112,15 @@ public class CheckerDragState extends ControllerState {
         ITable table = gameActivity.getGameModel().getGame().table();
 
         remaining.forEach(move -> {
-            if (playerId == PlayerId.FIRST && isValidMove(table.getField(startField + move), playerId)) {
+            if (startField == -1) {
+                if (playerId == PlayerId.FIRST && isValidMove(table.getField(move - 1), playerId)) {
+                    possibleMoves.add(move - 1);
+                } else if (playerId == PlayerId.SECOND && isValidMove(table.getField(ITable.NUMBER_OF_FIELDS - move), playerId)) {
+                    possibleMoves.add(ITable.NUMBER_OF_FIELDS - move);
+                }
+            } else if (playerId == PlayerId.FIRST && startField + move < ITable.NUMBER_OF_FIELDS && isValidMove(table.getField(startField + move), playerId)) {
                 possibleMoves.add(startField + move);
-            } else if (playerId == PlayerId.SECOND && isValidMove(table.getField(startField - move), playerId)) {
+            } else if (playerId == PlayerId.SECOND && startField - move > 0 && isValidMove(table.getField(startField - move), playerId)) {
                 possibleMoves.add(startField - move);
             }
         });
@@ -122,9 +149,15 @@ public class CheckerDragState extends ControllerState {
         int minField = startField;
 
         for (Integer field : possibleMoves) {
-            Point point = FieldGeometryUtility.pointFromIndex(field);
-            Rect rect = FieldGeometryUtility.rectFromPoint(point, width, height, boardFeatures);
-            double dist = FieldGeometryUtility.distance(target, rect);
+            Rect rect;
+            if (field == -1) {
+                rect = GeometryUtility.barRectFromPlayerId(gameActivity.getGameModel().getCurrentPlayer(), width, height, boardFeatures);
+            } else {
+                Point point = GeometryUtility.pointFromIndex(field);
+                rect = GeometryUtility.rectFromPoint(point, width, height, boardFeatures);
+            }
+
+            double dist = GeometryUtility.distance(target, rect);
             if (dist < minDist && dist < DIST_THRESHOLD) {
                 minDist = dist;
                 minField = field;

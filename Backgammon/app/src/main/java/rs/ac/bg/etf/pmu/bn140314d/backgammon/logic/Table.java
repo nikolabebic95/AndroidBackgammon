@@ -204,6 +204,16 @@ public class Table implements ITable {
     }
 
     @Override
+    public void setPlayerOneBar(int playerOneBar) {
+        this.playerOneBar = playerOneBar;
+    }
+
+    @Override
+    public void setPlayerTwoBar(int playerTwoBar) {
+        this.playerTwoBar = playerTwoBar;
+    }
+
+    @Override
     public int getPlayerOneOff() {
         return playerOneOff;
     }

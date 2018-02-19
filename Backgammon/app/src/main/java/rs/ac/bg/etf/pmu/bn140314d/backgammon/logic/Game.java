@@ -241,6 +241,40 @@ public class Game implements IGame {
     }
 
     @Override
+    public ArrayList<Integer> calculateAllStartingIndices(PlayerId playerId, Dice dice, ArrayList<Integer> played) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        // If the current player has a checker on the bar, only that checker can be played
+        if (playerId == PlayerId.FIRST && table.getPlayerOneBar() > 0 || playerId == PlayerId.SECOND && table.getPlayerTwoBar() > 0) {
+            ret.add(-1);
+            return ret;
+        }
+
+        ArrayList<Integer> remaining = computeRemaining(dice, played);
+
+        ArrayList<Integer> indicesWithPlayer = table.getAllIndicesWithPlayer(playerId);
+        indicesWithPlayer.forEach(index -> {
+            if (playerId == PlayerId.FIRST) {
+                for (Integer item : remaining) {
+                    if (index + item < ITable.NUMBER_OF_FIELDS && isValidMove(table.getField(index + item), playerId)) {
+                        ret.add(index);
+                        break;
+                    }
+                }
+            } else if (playerId == PlayerId.SECOND) {
+                for (Integer item : remaining) {
+                    if (index - item > 0 && isValidMove(table.getField(index - item), playerId)) {
+                        ret.add(index);
+                        break;
+                    }
+                }
+            }
+        });
+
+        return ret;
+    }
+
+    @Override
     public IGame makeCopy() {
         Game ret = new Game();
         ret.table = this.table.makeCopy();
@@ -251,6 +285,23 @@ public class Game implements IGame {
     @Override
     public ITable table() {
         return table;
+    }
+
+    private static ArrayList<Integer> computeRemaining(Dice dice, ArrayList<Integer> played) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        if (dice.getSmallerDie() == dice.getGreaterOrEqualDie()) {
+            ret.add(dice.getSmallerDie());
+        } else {
+            if (!played.contains(dice.getSmallerDie())) ret.add(dice.getSmallerDie());
+            if (!played.contains(dice.getGreaterOrEqualDie())) ret.add(dice.getGreaterOrEqualDie());
+        }
+
+        return ret;
+    }
+
+    private static boolean isValidMove(IField field, PlayerId playerId) {
+        return field.getNumberOfChips() < 2 || field.getPlayerId() == playerId;
     }
 
     // endregion

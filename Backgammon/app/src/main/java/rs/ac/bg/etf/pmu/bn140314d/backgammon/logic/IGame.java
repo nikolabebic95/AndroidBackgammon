@@ -54,6 +54,15 @@ public interface IGame extends Serializable {
     ArrayList<Move> calculateAllPossibleMoves(PlayerId playerId, Dice dice);
 
     /**
+     * Calculates all the indices from which a move can be started
+     * @param playerId Player ID
+     * @param dice Dice roll
+     * @param played Array of all the moves that have already been played
+     * @return Array of all starting indices
+     */
+    ArrayList<Integer> calculateAllStartingIndices(PlayerId playerId, Dice dice, ArrayList<Integer> played);
+
+    /**
      * Makes a deep copy of the game and returns it
      * @return Deep copy of the game
      */
