@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -17,6 +18,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.FieldFactory;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Game;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.Table;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.AppDatabase;
 
 /**
  * Utility class used for accessing persistent data
@@ -30,8 +32,18 @@ public final class Persistence {
     private static final String PREFERENCES_FILE_NAME = "preferences.xml";
     private static final String GAME_MODEL_FILE_NAME = "game_model.bin";
 
+    private static AppDatabase appDatabase;
+
     private static Settings cachedSettings;
     private static GameModel cachedGameModel;
+
+    public static AppDatabase getAppDatabase(Context context) {
+        if (appDatabase == null) {
+            appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "backgammondb").allowMainThreadQueries().build();
+        }
+
+        return appDatabase;
+    }
 
     /**
      * Checks if there is already a started game

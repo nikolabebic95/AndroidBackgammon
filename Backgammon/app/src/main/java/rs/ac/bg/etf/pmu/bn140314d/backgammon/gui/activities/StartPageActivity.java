@@ -62,6 +62,7 @@ public class StartPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
         mContentView = findViewById(R.id.fullscreen_content);
+        Persistence.getAppDatabase(this);
     }
 
     @Override
