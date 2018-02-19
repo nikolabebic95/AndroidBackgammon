@@ -96,10 +96,10 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         mContentView = findViewById(R.id.fullscreen_content);
 
-        init(savedInstanceState);
-
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         registerListener();
+
+        init();
 
         canvasView = findViewById(R.id.canvas_view);
         canvasView.setGameActivity(this);
@@ -138,7 +138,7 @@ public class GameActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    private void init(Bundle savedInstanceState) {
+    private void init() {
         settings = Persistence.loadSettings(this);
         gameModel = Persistence.loadGameModel(this);
 
@@ -156,6 +156,7 @@ public class GameActivity extends AppCompatActivity {
 
         toggleDiceAndButton();
         updateDice();
+        updateScore();
     }
 
     public Settings getSettings() {
@@ -202,6 +203,12 @@ public class GameActivity extends AppCompatActivity {
             dice.setVisibility(View.INVISIBLE);
             button.setVisibility(View.VISIBLE);
         }
+
+        if (controller.usesAccelerometer()) {
+            registerListener();
+        } else {
+            unregisterListener();
+        }
     }
 
     public void updateDice() {
@@ -215,6 +222,12 @@ public class GameActivity extends AppCompatActivity {
             } else {
                 dice1.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getGreaterOrEqualDie()));
                 dice2.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getSmallerDie()));
+            }
+
+            if (controller.usesAccelerometer()) {
+                registerListener();
+            } else {
+                unregisterListener();
             }
         }
     }

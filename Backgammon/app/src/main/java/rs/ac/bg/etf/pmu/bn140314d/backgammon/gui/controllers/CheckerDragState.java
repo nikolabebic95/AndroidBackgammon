@@ -119,7 +119,15 @@ public class CheckerDragState extends ControllerState {
         }
 
         if (field != startField) {
-            gameModel.play(Math.abs(field - startField));
+            if (startField == -1) {
+                if (playerId == PlayerId.FIRST) {
+                    gameModel.play(field - 1);
+                } else if (playerId == PlayerId.SECOND) {
+                    gameModel.play(ITable.NUMBER_OF_FIELDS - field);
+                }
+            } else {
+                gameModel.play(Math.abs(field - startField));
+            }
         }
 
         if (checkIfShouldPlayMore()) gameActivity.setController(parent);

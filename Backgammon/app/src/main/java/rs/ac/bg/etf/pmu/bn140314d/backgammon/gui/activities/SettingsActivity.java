@@ -99,6 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void onConfirmClicked(View view) {
         saveInstanceState();
         Persistence.saveSettings(this, settings);
+        finish();
     }
 
     public void onResetClicked(View view) {
