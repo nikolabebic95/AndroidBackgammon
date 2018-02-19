@@ -24,7 +24,8 @@ public class WaitingForDiceRollState extends ControllerState {
         rollDice();
 
         gameActivity.getGameModel().setGameState(GameState.SHOULD_MOVE);
-        gameActivity.setController(new WaitingForMoveState(gameActivity));
+        if (gameActivity.isCurrentPlayerCpu()) gameActivity.setController(new CpuMoveState(gameActivity));
+        else gameActivity.setController(new WaitingForMoveState(gameActivity));
         gameActivity.toggleDiceAndButton();
         gameActivity.getCanvasView().invalidate();
         gameActivity.unregisterListener();

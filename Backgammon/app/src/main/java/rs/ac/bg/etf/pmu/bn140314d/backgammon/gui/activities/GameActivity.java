@@ -304,4 +304,8 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GameHistoryActivity.class);
         startActivity(intent);
     }
+
+    public boolean isCurrentPlayerCpu() {
+        return gameModel.getCurrentPlayer() == PlayerId.FIRST && settings.isPlayer1Bot() || gameModel.getCurrentPlayer() == PlayerId.SECOND && settings.isPlayer2Bot();
+    }
 }
