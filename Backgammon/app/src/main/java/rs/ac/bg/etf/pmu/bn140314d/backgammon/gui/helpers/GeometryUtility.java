@@ -103,4 +103,10 @@ public final class GeometryUtility {
 
         return Math.sqrt(dx * dx + dy * dy);
     }
+
+    public static double distance(Point lhs, Point rhs) {
+        int dx = lhs.x - rhs.x;
+        int dy = lhs.y - rhs.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }

@@ -21,10 +21,15 @@ public class CheckerDragState extends ControllerState {
     private int startField;
     private float x;
     private float y;
+    private long startMillis;
+    private boolean wasInside;
+    private Point start;
 
     private final ArrayList<Integer> possibleMoves = new ArrayList<>();
 
     private static final double DIST_THRESHOLD = 500;
+    private static final long MILLIS_THRESHOLD = 1000;
+    private static final double INSIDE_THRESHOLD = 200;
 
     public CheckerDragState(GameActivity gameActivity, WaitingForMoveState parent, int startField, float x, float y) {
         super(gameActivity);
@@ -32,6 +37,9 @@ public class CheckerDragState extends ControllerState {
         this.startField = startField;
         this.x = x;
         this.y = y;
+        start = new Point((int)x, (int)y);
+        startMillis = System.currentTimeMillis();
+        wasInside = true;
         initPossibleMoves();
         gameActivity.getCanvasView().invalidate();
     }
@@ -46,6 +54,40 @@ public class CheckerDragState extends ControllerState {
         this.x = x;
         this.y = y;
         gameActivity.getCanvasView().invalidate();
+
+        GameModel gameModel = gameActivity.getGameModel();
+        ITable table = gameModel.getGame().table();
+        PlayerId playerId = gameModel.getCurrentPlayer();
+
+        if (table.canBearOff(playerId) && wasInside) {
+            if (System.currentTimeMillis() - startMillis > MILLIS_THRESHOLD) {
+                ArrayList<Integer> remaining = computeRemaining(gameModel.getDice(), gameModel.getPlayed());
+
+                for (Integer item : remaining) {
+                    if (playerId == PlayerId.FIRST && startField + item >= ITable.NUMBER_OF_FIELDS || playerId == PlayerId.SECOND && startField - item < 0) {
+                        table.bearOff(playerId);
+                        gameActivity.updateScore();
+                        gameModel.play(item);
+
+                        if (checkIfShouldPlayMore()) gameActivity.setController(parent);
+                        else {
+                            gameModel.getPlayed().clear();
+                            gameModel.setCurrentPlayer(gameActivity.getGameModel().getCurrentPlayer().other());
+                            gameModel.setGameState(GameState.SHOULD_ROLL);
+                            gameActivity.setController(new WaitingForDiceRollState(gameActivity));
+                            gameActivity.toggleDiceAndButton();
+                        }
+
+                        Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
+                        gameActivity.getCanvasView().invalidate();
+                        break;
+                    }
+                }
+            } else {
+                double dist = GeometryUtility.distance(new Point((int)x, (int)y), start);
+                if (dist > INSIDE_THRESHOLD) wasInside = false;
+            }
+        }
     }
 
     @Override
@@ -87,9 +129,9 @@ public class CheckerDragState extends ControllerState {
             gameModel.setGameState(GameState.SHOULD_ROLL);
             gameActivity.setController(new WaitingForDiceRollState(gameActivity));
             gameActivity.toggleDiceAndButton();
-            Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
         }
 
+        Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
         gameActivity.getCanvasView().invalidate();
     }
 
@@ -120,7 +162,7 @@ public class CheckerDragState extends ControllerState {
                 }
             } else if (playerId == PlayerId.FIRST && startField + move < ITable.NUMBER_OF_FIELDS && isValidMove(table.getField(startField + move), playerId)) {
                 possibleMoves.add(startField + move);
-            } else if (playerId == PlayerId.SECOND && startField - move > 0 && isValidMove(table.getField(startField - move), playerId)) {
+            } else if (playerId == PlayerId.SECOND && startField - move >= 0 && isValidMove(table.getField(startField - move), playerId)) {
                 possibleMoves.add(startField - move);
             }
         });
@@ -143,7 +185,6 @@ public class CheckerDragState extends ControllerState {
         int width = gameActivity.getCanvasView().getWidth();
         int height = gameActivity.getCanvasView().getHeight();
         BoardFeatures boardFeatures = gameActivity.getSettings().getBoardFeatures();
-
 
         double minDist = Double.MAX_VALUE;
         int minField = startField;

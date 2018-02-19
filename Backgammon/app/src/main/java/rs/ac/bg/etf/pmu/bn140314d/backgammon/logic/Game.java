@@ -255,18 +255,30 @@ public class Game implements IGame {
         ArrayList<Integer> indicesWithPlayer = table.getAllIndicesWithPlayer(playerId);
         indicesWithPlayer.forEach(index -> {
             if (playerId == PlayerId.FIRST) {
+                boolean added = false;
                 for (Integer item : remaining) {
                     if (index + item < ITable.NUMBER_OF_FIELDS && isValidMove(table.getField(index + item), playerId)) {
                         ret.add(index);
+                        added = true;
                         break;
                     }
                 }
+
+                if (!added && table.canBearOff(playerId) && index + remaining.get(remaining.size() - 1) >= ITable.NUMBER_OF_FIELDS) {
+                    ret.add(index);
+                }
             } else if (playerId == PlayerId.SECOND) {
+                boolean added = false;
                 for (Integer item : remaining) {
-                    if (index - item > 0 && isValidMove(table.getField(index - item), playerId)) {
+                    if (index - item >= 0 && isValidMove(table.getField(index - item), playerId)) {
                         ret.add(index);
+                        added = true;
                         break;
                     }
+                }
+
+                if (!added && table.canBearOff(playerId) && index - remaining.get(remaining.size() - 1) < 0) {
+                    ret.add(index);
                 }
             }
         });

@@ -55,31 +55,6 @@ public class Table implements ITable {
         }
     }
 
-    private boolean canBearOff(PlayerId playerId) {
-        if (playerId == PlayerId.FIRST && playerOneBar != 0) {
-            return false;
-        } else if (playerId == PlayerId.SECOND && playerTwoBar != 0) {
-            return false;
-        }
-
-        int offset = playerId == PlayerId.SECOND ? ITable.NUMBER_OF_FIELDS / 4 : 0;
-        for (int i = 0; i < ITable.NUMBER_OF_FIELDS * 3 / 4; i++) {
-            if (fields[i + offset].getPlayerId() == playerId) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void bearOff(PlayerId playerId) {
-        if (playerId == PlayerId.FIRST) {
-            playerOneOff++;
-        } else {
-            playerTwoOff++;
-        }
-    }
-
     private boolean tryPutChip(PlayerId playerId, int index) {
         if (!canBePlaced(playerId, index)) {
             return false;
@@ -98,6 +73,33 @@ public class Table implements ITable {
     // endregion
 
     // region ITable implementation
+
+    @Override
+    public boolean canBearOff(PlayerId playerId) {
+        if (playerId == PlayerId.FIRST && playerOneBar != 0) {
+            return false;
+        } else if (playerId == PlayerId.SECOND && playerTwoBar != 0) {
+            return false;
+        }
+
+        int offset = playerId == PlayerId.SECOND ? ITable.NUMBER_OF_FIELDS / 4 : 0;
+        for (int i = 0; i < ITable.NUMBER_OF_FIELDS * 3 / 4; i++) {
+            if (fields[i + offset].getPlayerId() == playerId) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void bearOff(PlayerId playerId) {
+        if (playerId == PlayerId.FIRST) {
+            playerOneOff++;
+        } else {
+            playerTwoOff++;
+        }
+    }
 
     @Override
     public IField getField(int index) {

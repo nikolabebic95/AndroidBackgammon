@@ -20,6 +20,19 @@ public interface ITable extends Serializable {
     int NUMBER_OF_CHECKERS_PER_PLAYER = 15;
 
     /**
+     * Checks whether the player can bear off his checkers
+     * @param playerId Player ID
+     * @return Whether the player can bear off his checkers
+     */
+    boolean canBearOff(PlayerId playerId);
+
+    /**
+     * Bears off one of the players checkers
+     * @param playerId Player ID
+     */
+    void bearOff(PlayerId playerId);
+
+    /**
      * Gets the field at the specified index
      * Player 1 moves towards 23, player 2 moves towards 0
      * @param index Index of field

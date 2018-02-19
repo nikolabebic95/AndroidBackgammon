@@ -39,14 +39,22 @@
                 android:id="@+id/player_1_text_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:text="@string/player_1" />
+
+            <TextView
+                android:id="@+id/player_1_points"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0" />
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="4">
 
                 <LinearLayout
                     android:id="@+id/dice"
@@ -80,10 +88,18 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/player_2_points"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0" />
+
+            <TextView
                 android:id="@+id/player_2_text_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:text="@string/player_2" />
 

@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,6 +22,7 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.ControllerState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForDiceRollState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForMoveState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.DiceImagesHelper;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Settings;
 
@@ -215,5 +217,16 @@ public class GameActivity extends AppCompatActivity {
                 dice2.setImageResource(DiceImagesHelper.getDiceResource(gameModel.getDice().getSmallerDie()));
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void updateScore() {
+        TextView player1Points = findViewById(R.id.player_1_points);
+        TextView player2Points = findViewById(R.id.player_2_points);
+
+        ITable table = gameModel.getGame().table();
+
+        player1Points.setText(Integer.toString(table.getPlayerOneOff()));
+        player2Points.setText(Integer.toString(table.getPlayerTwoOff()));
     }
 }
