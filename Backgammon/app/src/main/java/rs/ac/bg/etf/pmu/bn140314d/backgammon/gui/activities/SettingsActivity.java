@@ -180,11 +180,13 @@ public class SettingsActivity extends AppCompatActivity {
         EditText player2Name = findViewById(R.id.player_2_name);
         Switch player1Bot = findViewById(R.id.player_1_bot);
         Switch player2Bot = findViewById(R.id.player_2_bot);
+        Switch sound = findViewById(R.id.sound);
 
         settings.setPlayer1Name(player1Name.getText().toString());
         settings.setPlayer2Name(player2Name.getText().toString());
         settings.setPlayer1Bot(player1Bot.isChecked());
         settings.setPlayer2Bot(player2Bot.isChecked());
+        settings.setSoundOn(sound.isChecked());
     }
 
     private CharSequence getBotText(boolean isBot) {

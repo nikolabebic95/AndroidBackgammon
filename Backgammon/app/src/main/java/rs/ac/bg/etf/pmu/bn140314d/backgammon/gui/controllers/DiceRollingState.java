@@ -1,14 +1,24 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers;
 
 import android.hardware.SensorEvent;
+import android.media.MediaPlayer;
 
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.R;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities.GameActivity;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 
 public class DiceRollingState extends ControllerState {
+    private MediaPlayer mediaPlayer;
+
     public DiceRollingState(GameActivity gameActivity) {
         super(gameActivity);
+
+        if (gameActivity.getSettings().isSoundOn()) {
+            mediaPlayer = MediaPlayer.create(gameActivity, R.raw.dice);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
     }
 
     @Override
@@ -19,6 +29,7 @@ public class DiceRollingState extends ControllerState {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (!gameActivity.isShake()) {
+            if (gameActivity.getSettings().isSoundOn()) mediaPlayer.stop();
             rollDice();
 
             gameActivity.getGameModel().setGameState(GameState.SHOULD_MOVE);
