@@ -38,7 +38,13 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_hall_of_fame"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/AppTheme.HallOfFamePage" />
+        <activity
+            android:name=".gui.activities.GameHistoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_game_history"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/AppTheme.HallOfFamePage" />
     </application>
 
 </manifest>

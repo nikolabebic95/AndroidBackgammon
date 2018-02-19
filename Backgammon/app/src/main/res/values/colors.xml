@@ -7,6 +7,6 @@
     <color name="colorButtonBackground">#323232</color>
     <color name="colorButtonDisabled">#7E7E7E</color>
     <color name="colorButtonPressed">#9876AA</color>
-    
+
     <color name="black_overlay">#66000000</color>
 </resources>

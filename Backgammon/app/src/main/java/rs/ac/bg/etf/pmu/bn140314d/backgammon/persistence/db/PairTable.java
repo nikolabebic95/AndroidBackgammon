@@ -7,9 +7,9 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "pair_table")
 public class PairTable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "pair_id")
-    private int pairId;
+    private long pairId;
 
     @ColumnInfo(name = "player_one_name")
     private String playerOneName;
@@ -23,11 +23,11 @@ public class PairTable {
     @ColumnInfo(name = "player_two_victories")
     private int playerTwoVictories;
 
-    public int getPairId() {
+    public long getPairId() {
         return pairId;
     }
 
-    public void setPairId(int pairId) {
+    public void setPairId(long pairId) {
         this.pairId = pairId;
     }
 

@@ -2,6 +2,7 @@ package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,8 +24,13 @@ import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForDiceRollS
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.controllers.WaitingForMoveState;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.helpers.DiceImagesHelper;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.ITable;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.PlayerId;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Settings;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.AppDatabase;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.DataAccessObject;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.GameTable;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.PairTable;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -241,5 +247,61 @@ public class GameActivity extends AppCompatActivity {
 
         player1Points.setText(Integer.toString(table.getPlayerOneOff()));
         player2Points.setText(Integer.toString(table.getPlayerTwoOff()));
+    }
+
+    public void finishUp() {
+        long timestamp = System.currentTimeMillis();
+        String playerOneName = settings.getPlayer1Name();
+        String playerTwoName = settings.getPlayer2Name();
+        String winner = gameModel.getGame().checkWinner() == PlayerId.FIRST ? playerOneName : playerTwoName;
+        int playerOnePoints = gameModel.getGame().table().getPlayerOneOff();
+        int playerTwoPoints = gameModel.getGame().table().getPlayerTwoOff();
+
+        AppDatabase appDatabase = Persistence.getAppDatabase(this);
+        DataAccessObject dao = appDatabase.dataAccessObject();
+
+        Persistence.clearCurrentGame(this);
+
+        PairTable pairTable = dao.loadPairByNames(playerOneName, playerTwoName);
+        long id;
+        if (pairTable == null) {
+            pairTable = new PairTable();
+            pairTable.setPlayerOneName(playerOneName);
+            pairTable.setPlayerTwoName(playerTwoName);
+            if (winner.equals(playerOneName)) {
+                pairTable.setPlayerOneVictories(1);
+                pairTable.setPlayerTwoVictories(0);
+            } else {
+                pairTable.setPlayerOneVictories(0);
+                pairTable.setPlayerTwoVictories(1);
+            }
+
+            id = dao.insertPair(pairTable);
+        } else {
+            if (winner.equals(pairTable.getPlayerOneName())) {
+                pairTable.setPlayerOneVictories(pairTable.getPlayerOneVictories() + 1);
+            } else {
+                pairTable.setPlayerTwoVictories(pairTable.getPlayerTwoVictories() + 1);
+            }
+
+            dao.updatePair(pairTable);
+            id = pairTable.getPairId();
+        }
+
+        GameTable gameTable = new GameTable();
+        gameTable.setGameTimestamp(timestamp);
+        gameTable.setPlayerOneName(playerOneName);
+        gameTable.setPlayerTwoName(playerTwoName);
+        gameTable.setWinner(winner);
+        gameTable.setPlayerOnePoints(playerOnePoints);
+        gameTable.setPlayerTwoPoints(playerTwoPoints);
+        gameTable.setPairId(id);
+
+        dao.insertGame(gameTable);
+
+        Persistence.savePairId(id);
+
+        Intent intent = new Intent(this, GameHistoryActivity.class);
+        startActivity(intent);
     }
 }

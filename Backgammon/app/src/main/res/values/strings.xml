@@ -21,4 +21,9 @@
     <string name="confirm">Confirm</string>
     <string name="reset_to_default">Reset to default</string>
     <string name="roll_dice">Roll dice</string>
+
+    <string name="title_activity_game_history">GameHistoryActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="clear">Clear</string>
 </resources>

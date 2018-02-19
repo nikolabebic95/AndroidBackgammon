@@ -11,32 +11,32 @@ import java.util.List;
 @Dao
 public interface DataAccessObject {
     @Insert
-    void insertPair(PairTable pairTable);
+    long insertPair(PairTable pairTable);
 
     @Insert
-    void insertGame(GameTable gameTable);
+    long insertGame(GameTable gameTable);
 
     @Update
-    void updatePair(PairTable pairTable);
-
-    @Update
-    void updateGame(GameTable gameTable);
+    int updatePair(PairTable pairTable);
 
     @Delete
-    void deletePair(PairTable pairTable);
+    int deletePair(PairTable pairTable);
 
     @Delete
-    void deleteGame(GameTable gameTable);
+    int deleteGame(GameTable gameTable);
+
+    @Query("DELETE FROM pair_table")
+    void deleteAllPairs();
 
     @Query("SELECT * FROM pair_table")
     List<PairTable> loadAllPairs();
 
-    @Query("SELECT * FROM pair_table WHERE pair_id = :pairId")
-    PairTable loadPairById(int pairId);
+    @Query("SELECT * FROM pair_table WHERE pair_id = :pairId LIMIT 1")
+    PairTable loadPairById(long pairId);
 
-    @Query("SELECT * FROM pair_table WHERE player_one_name = :playerOneName AND player_two_name = :playerTwoName OR player_one_name = :playerTwoName AND player_two_name = :playerOneName")
+    @Query("SELECT * FROM pair_table WHERE player_one_name = :playerOneName AND player_two_name = :playerTwoName OR player_one_name = :playerTwoName AND player_two_name = :playerOneName LIMIT 1")
     PairTable loadPairByNames(String playerOneName, String playerTwoName);
 
     @Query("SELECT * FROM game_table WHERE pair_id = :pairId ORDER BY game_timestamp DESC")
-    List<GameTable> loadAllGamesOfPair(int pairId);
+    List<GameTable> loadAllGamesOfPair(long pairId);
 }

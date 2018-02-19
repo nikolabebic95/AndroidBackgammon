@@ -1,6 +1,5 @@
 package rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -11,19 +10,24 @@ import android.widget.ListView;
 import java.util.List;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.R;
-import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.HallOfFameAdapter;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameHistoryAdapter;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.Persistence;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.AppDatabase;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.DataAccessObject;
+import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.GameTable;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.persistence.db.PairTable;
 
-public class HallOfFameActivity extends AppCompatActivity {
+/**
+ * An example full-screen activity that shows and hides the system UI (i.e.
+ * status bar and navigation/system bar) with user interaction.
+ */
+public class GameHistoryActivity extends AppCompatActivity {
 
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
      */
-    private static final int UI_ANIMATION_DELAY = 100;
+    private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
 
@@ -40,29 +44,29 @@ public class HallOfFameActivity extends AppCompatActivity {
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
     public void onClearClicked(View view) {
+        long pairId = Persistence.loadPairId();
         AppDatabase appDatabase = Persistence.getAppDatabase(this);
         DataAccessObject dao = appDatabase.dataAccessObject();
-        dao.deleteAllPairs();
-        init();
+
+        dao.deletePair(dao.loadPairById(pairId));
+        finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hall_of_fame);
+
+        setContentView(R.layout.activity_game_history);
+
         mContentView = findViewById(R.id.fullscreen_content);
+
+        init();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         hide();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        init();
     }
 
     private void hide() {
@@ -76,24 +80,28 @@ public class HallOfFameActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    private void init() {
+    void init() {
+        long pairId = Persistence.loadPairId();
+
         ListView listView = findViewById(R.id.list);
 
         AppDatabase appDatabase = Persistence.getAppDatabase(this);
         DataAccessObject dao = appDatabase.dataAccessObject();
-        List<PairTable> pairTables = dao.loadAllPairs();
+        List<GameTable> gameTables = dao.loadAllGamesOfPair(pairId);
 
-        HallOfFameAdapter adapter = new HallOfFameAdapter(this, pairTables);
+        GameHistoryAdapter adapter = new GameHistoryAdapter(this, gameTables);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener((adapterView, view, position, id) -> {
-            Persistence.savePairId(pairTables.get(position).getPairId());
-            Intent intent = new Intent(HallOfFameActivity.this, GameHistoryActivity.class);
-            startActivity(intent);
-        });
-
         listView.setOnItemLongClickListener(((adapterView, view, position, id) -> {
-            dao.deletePair(pairTables.get(position));
+            PairTable pairTable = dao.loadPairById(pairId);
+            if (pairTable.getPlayerOneName().equals(gameTables.get(position).getWinner())) {
+                pairTable.setPlayerOneVictories(pairTable.getPlayerOneVictories() - 1);
+            } else {
+                pairTable.setPlayerTwoVictories(pairTable.getPlayerTwoVictories() - 1);
+            }
+
+            dao.updatePair(pairTable);
+            dao.deleteGame(gameTables.get(position));
             init();
             return true;
         }));

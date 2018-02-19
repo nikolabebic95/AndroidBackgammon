@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.gui.GameModel;
 import rs.ac.bg.etf.pmu.bn140314d.backgammon.logic.FieldFactory;
@@ -36,6 +33,7 @@ public final class Persistence {
 
     private static Settings cachedSettings;
     private static GameModel cachedGameModel;
+    private static long pairId;
 
     public static AppDatabase getAppDatabase(Context context) {
         if (appDatabase == null) {
@@ -139,5 +137,13 @@ public final class Persistence {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void savePairId(long pairId) {
+        Persistence.pairId = pairId;
+    }
+
+    public static long loadPairId() {
+        return pairId;
     }
 }

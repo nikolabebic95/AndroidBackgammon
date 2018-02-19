@@ -11,9 +11,9 @@ import android.arch.persistence.room.PrimaryKey;
                                                             onDelete = ForeignKey.CASCADE))
 public class GameTable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "game_id")
-    private int gameId;
+    private long gameId;
 
     @ColumnInfo(name = "game_timestamp")
     private long gameTimestamp;
@@ -28,19 +28,19 @@ public class GameTable {
     private String winner;
 
     @ColumnInfo(name = "player_one_points")
-    private String playerOnePoints;
+    private int playerOnePoints;
 
     @ColumnInfo(name = "player_two_points")
-    private String playerTwoPoints;
+    private int playerTwoPoints;
 
     @ColumnInfo(name = "pair_id")
-    private int pairId;
+    private long pairId;
 
-    public int getGameId() {
+    public long getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(long gameId) {
         this.gameId = gameId;
     }
 
@@ -76,27 +76,27 @@ public class GameTable {
         this.winner = winner;
     }
 
-    public String getPlayerOnePoints() {
+    public int getPlayerOnePoints() {
         return playerOnePoints;
     }
 
-    public void setPlayerOnePoints(String playerOnePoints) {
+    public void setPlayerOnePoints(int playerOnePoints) {
         this.playerOnePoints = playerOnePoints;
     }
 
-    public String getPlayerTwoPoints() {
+    public int getPlayerTwoPoints() {
         return playerTwoPoints;
     }
 
-    public void setPlayerTwoPoints(String playerTwoPoints) {
+    public void setPlayerTwoPoints(int playerTwoPoints) {
         this.playerTwoPoints = playerTwoPoints;
     }
 
-    public int getPairId() {
+    public long getPairId() {
         return pairId;
     }
 
-    public void setPairId(int pairId) {
+    public void setPairId(long pairId) {
         this.pairId = pairId;
     }
 }

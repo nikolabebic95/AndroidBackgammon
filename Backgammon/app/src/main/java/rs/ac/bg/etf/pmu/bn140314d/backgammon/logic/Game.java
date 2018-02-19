@@ -52,6 +52,7 @@ public class Game implements IGame {
 
     @Override
     public PlayerId checkWinner() {
+        checkForWin();
         return winner;
     }
 

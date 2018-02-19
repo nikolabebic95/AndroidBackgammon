@@ -78,8 +78,12 @@ public class CheckerDragState extends ControllerState {
                             gameActivity.toggleDiceAndButton();
                         }
 
-                        Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
-                        gameActivity.getCanvasView().invalidate();
+                        if (gameModel.getGame().checkWinner() != PlayerId.NONE) {
+                            gameActivity.finishUp();
+                        } else {
+                            Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
+                            gameActivity.getCanvasView().invalidate();
+                        }
                         break;
                     }
                 }
@@ -139,8 +143,13 @@ public class CheckerDragState extends ControllerState {
             gameActivity.toggleDiceAndButton();
         }
 
-        Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
-        gameActivity.getCanvasView().invalidate();
+        if (gameModel.getGame().checkWinner() != PlayerId.NONE) {
+            gameActivity.finishUp();
+        }
+        else {
+            Persistence.saveGameModel(gameActivity, gameActivity.getGameModel());
+            gameActivity.getCanvasView().invalidate();
+        }
     }
 
     @Override
